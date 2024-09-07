@@ -14,19 +14,28 @@ final model = await server.fetchRecord(
 );
 ```
 
-Fetch records from an SDMX server. The package abstracts away the headers needed to be passed and parses the JSON into a Dart readable object of type `SDMXModel`.
+Fetch records from an SDMX server. The method abstracts
+
+- the headers needed to be passed
+- parsing JSON to a Dart readable object of type `SDMXModel`.
 
 ### Access model dimensions neatly
 
 ```dart
-model.extractDimensionOptionsAsIds() == {"MEASURE":["POPGWTH","POP"],"UNIT_MEASURE":["RATE","PS"],"REF_AREA":["AE"],"FREQ":["A"],"GENDER":["F","_T","M"],"POP_IND":["_Z"],"SOURCE_DETAIL":["FCSC"],"TIME_PERIOD":["2017","2018","2019","2020"]};
+model.extractDimensionOptionsAsIds();
+// {"MEASURE":["POPGWTH","POP"],"UNIT_MEASURE":["RATE","PS"],"REF_AREA":["AE"],"FREQ":["A"],"GENDER":["F","_T","M"],"POP_IND":["_Z"],"SOURCE_DETAIL":["FCSC"],"TIME_PERIOD":["2017","2018","2019","2020"]};
 
-model.extractDimensionOptionsAsNames() == {{en: Measure, ar: القياس}: [{en: Population Growth Rate, ar: معدل النمو السكاني}, {en: Population Estimate, ar: تقديرات السكان}], {en: Unit of measure, ar: وحدة القياس}: [{en: Rate, ar: معدل}, {en: Persons, ar: الأفراد}], {en: Reference area, ar: النطاق الجغرافي}: [{en: UAE, ar: الإمارات العربية المتحدة}], {en: Frequency, ar: الدورية}: [{en: Annual, ar: سنوي}], {en: Gender, ar: النوع}: [{en: Female, ar: أنثى}, {en: Total, ar: الإجمالي}, {en: Male, ar: ذكر}], {en: Population Indicators, ar: المؤشرات السكانية}: [{en: Not Applicable, ar: لا ينطبق}], {en: Source, ar: المصدر}: [{en: Federal Competitiveness and Statistics Centre, ar: المركز الاتحادي للتنافسية والإحصاء}], {en: Time period, ar: الفترة الزمنية}: [{en: 2017}, {en: 2018}, {en: 2019}, {en: 2020}]};
+model.extractDimensionOptionsAsNames();
+// {{en: Measure, ar: القياس}: [{en: Population Growth Rate, ar: معدل النمو السكاني}, {en: Population Estimate, ar: تقديرات السكان}], {en: Unit of measure, ar: وحدة القياس}: [{en: Rate, ar: معدل}, {en: Persons, ar: الأفراد}], {en: Reference area, ar: النطاق الجغرافي}: [{en: UAE, ar: الإمارات العربية المتحدة}], {en: Frequency, ar: الدورية}: [{en: Annual, ar: سنوي}], {en: Gender, ar: النوع}: [{en: Female, ar: أنثى}, {en: Total, ar: الإجمالي}, {en: Male, ar: ذكر}], {en: Population Indicators, ar: المؤشرات السكانية}: [{en: Not Applicable, ar: لا ينطبق}], {en: Source, ar: المصدر}: [{en: Federal Competitiveness and Statistics Centre, ar: المركز الاتحادي للتنافسية والإحصاء}], {en: Time period, ar: الفترة الزمنية}: [{en: 2017}, {en: 2018}, {en: 2019}, {en: 2020}]};
 ```
 
-Use convenience methods to view all possible dimensions in the model records in a human-readable format.
+View all possible dimensions in the model records as IDs, or in their full names in the given locales.
 
-### Filter through model records
+### `SDMXRecordEntry` as a helper class
+
+The `SDMXRecordEntry` class is designed to make filtering records and accessing translations easier. It is not part of the SDMX standard.
+
+#### Filtering records
 
 ```dart
 model.toEntries().where(
@@ -39,14 +48,23 @@ model.toEntries().where(
         final tp = int.parse(
             entry.propertiesAsIds['TIME_PERIOD']!
         );
-        return tp >= 2018 && tp < 2022>;
+        return tp >= 2018 && tp < 2022;
       },
     );
 ```
 
-The `SDMXRecordEntry` class is a utility model designed to make filtering records and accessing translations easier. After converting a model to a list of its record entries, you can filter them in a much more readable manner.
+#### Accessing translations
 
-### Add support for CSV decoding, cache or logging layers etc.
+```dart
+final entryPropertiesInArabic = entry.propertiesAsNames.map(
+    (key, value) => MapEntry(
+      key.forLanguage('ar'),
+      value.forLanguage('ar'),
+    ),
+  );
+```
+
+### Insert support for CSV decoding, cache or logging layers etc.
 
 ```dart
 abstract class SDMXDecoder {
