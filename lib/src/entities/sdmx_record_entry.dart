@@ -5,9 +5,30 @@ import 'package:sdmx/src/services/map_equals.dart';
 /// The [Names] object contains strings in locales
 /// defined in [SDMXServer].
 class SdmxRecordEntry<T extends Object> {
+  /// each element is an index for the options in model.extractDimensionOptionsAsIds
   final List<int> key;
+
+  /// usually a number value
   final T value;
+
+  /// displays properties in their ID form, e.g.
+  /// ```dart
+  /// {"REF_AREA": "UAE", "TIME_PERIOD": "2023"}
+  /// ```
   final Map<String, String> propertiesAsIds;
+
+  /// displays properties in their translations, e.g.
+  /// ```dart
+  /// {{
+  ///   "en": "REF_AREA", "ar": "...some arabic translation..."
+  /// }: {
+  ///   "en": "UAE", "ar": "...some arabic translation..."
+  /// }, {
+  ///   "en": "TIME_PERIOD", "ar": "...some arabic translation..."
+  /// }: {
+  ///   "en": "2023", "ar": "...some arabic translation..."
+  /// }}
+  /// ```
   final Map<Names, Names> propertiesAsNames;
 
   const SdmxRecordEntry({
@@ -17,6 +38,13 @@ class SdmxRecordEntry<T extends Object> {
     required this.propertiesAsNames,
   });
 
+  /// pass a filter like
+  /// ```dart
+  /// {
+  ///   'TIME_PERIOD': ['2018', '2019'],
+  /// }
+  /// ```
+  /// to only get records from 2018 and 2019
   bool anyPropertyInIdFormMatches(
     Map<String, List<String>> filter,
   ) =>

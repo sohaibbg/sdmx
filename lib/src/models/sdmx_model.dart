@@ -26,17 +26,32 @@ class SDMXModel<T extends Object> {
     required this.rawJson,
   });
 
+  /// mimicked from the SDMX standard
   final Meta meta;
+
+  /// mimicked from the SDMX standard
   final Data data;
+
+  /// mimicked from the SDMX standard
   final List<dynamic> errors;
+
+  /// Not part of the standard. contains the
+  /// raw json received by the constructor
+  /// so you can inspect it later.
   final Map<String, dynamic> rawJson;
 
+  /// name extracted from data structure in the variety of locales
   String get name => data.structures
       .map(
         (structure) => structure.names.data.values.join(', '),
       )
       .join('\n');
 
+  /// lists all possible dimension options
+  /// for this model in their ID forms, e.g.
+  /// ```dart
+  /// {"MEASURE":["POPGWTH","POP"],"UNIT_MEASURE":["RATE","PS"],"REF_AREA":["AE"],"FREQ":["A"],"GENDER":["F","_T","M"],"POP_IND":["_Z"],"SOURCE_DETAIL":["FCSC"],"TIME_PERIOD":["2017","2018","2019","2020"]}
+  /// ```
   Map<String, List<String>> extractDimensionOptionsAsIds() {
     final entries = data.structures
         .map(
@@ -56,6 +71,11 @@ class SDMXModel<T extends Object> {
     return Map.fromEntries(entries);
   }
 
+  /// lists all possible dimension options
+  /// for this model in their translated forms, e.g.
+  /// ```dart
+  /// {{en: Measure, ar: القياس}: [{en: Population Growth Rate, ar: معدل النمو السكاني}, {en: Population Estimate, ar: تقديرات السكان}], {en: Unit of measure, ar: وحدة القياس}: [{en: Rate, ar: معدل}, {en: Persons, ar: الأفراد}], {en: Reference area, ar: النطاق الجغرافي}: [{en: UAE, ar: الإمارات العربية المتحدة}], {en: Frequency, ar: الدورية}: [{en: Annual, ar: سنوي}], {en: Gender, ar: النوع}: [{en: Female, ar: أنثى}, {en: Total, ar: الإجمالي}, {en: Male, ar: ذكر}], {en: Population Indicators, ar: المؤشرات السكانية}: [{en: Not Applicable, ar: لا ينطبق}], {en: Source, ar: المصدر}: [{en: Federal Competitiveness and Statistics Centre, ar: المركز الاتحادي للتنافسية والإحصاء}], {en: Time period, ar: الفترة الزمنية}: [{en: 2017}, {en: 2018}, {en: 2019}, {en: 2020}]}
+  /// ```
   Map<Names, List<Names>> extractDimensionOptionsAsNames() {
     final entries = data.structures
         .map(
@@ -75,6 +95,8 @@ class SDMXModel<T extends Object> {
     return Map.fromEntries(entries);
   }
 
+  /// converts model into a list of [SdmxRecordEntry] objects.
+  /// These objects are easier to filter and translate.
   List<SdmxRecordEntry<T>> toEntries() {
     // in this method, dimensions are
     // referred to as properties for the purpose

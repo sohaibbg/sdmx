@@ -8,7 +8,14 @@ class SDMXServer {
   final String host;
 
   final http.Client client = http.Client();
+
+  /// used to decode network responses into [SDMXModel] objects
   final SDMXDecoder decoder;
+
+  /// must be added to get records in a variety of locales
+  /// ```dart
+  /// ['en', 'ar']
+  /// ```
   final List<String> locales;
 
   SDMXServer(
@@ -17,6 +24,9 @@ class SDMXServer {
     this.locales = const ['en'],
   });
 
+  /// fetches [path] in [locales]
+  /// from [host] and maps it to [SDMXModel]
+  /// using [decoder]
   Future<SDMXModel<T>> fetchRecord<T extends Object>(
     String path,
   ) async {
