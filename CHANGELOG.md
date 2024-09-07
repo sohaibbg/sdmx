@@ -14,3 +14,7 @@
 ## 1.0.3
 
 - CI/CD attempt 3
+
+## 1.0.4
+
+- CI/CD attempt 4
