@@ -1,7 +1,7 @@
 name: sdmx
-description: A starting point for Dart libraries or applications.
+description: Fetch, parse and filter through SDMX records
 version: 1.0.0
-# repository: https://github.com/my_org/my_repo
+repository: https://github.com/sohaibbg/sdmx
 
 environment:
   sdk: ^3.5.0
