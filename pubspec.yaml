@@ -1,6 +1,6 @@
 name: sdmx
 description: Fetch records from SDMX servers. Parse them into a Dart readable SDMXModel object. Filter with ease using SDMXRecordEntry objects.
-version: 1.0.2
+version: 1.0.3
 repository: https://github.com/sohaibbg/sdmx
 
 environment:

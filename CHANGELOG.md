@@ -10,3 +10,7 @@
 ## 1.0.2
 
 - CI/CD attempt 2
+
+## 1.0.3
+
+- CI/CD attempt 3
